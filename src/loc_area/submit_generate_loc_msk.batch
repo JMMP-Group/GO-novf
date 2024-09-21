@@ -1,0 +1,15 @@
+#!/bin/bash -l
+
+#SBATCH --qos=normal                
+#SBATCH --mem=100000                    
+#SBATCH --ntasks=8                   
+#SBATCH --output=gen_env.out       
+#SBATCH --time=360                    
+
+MEs_inp='/net/home/h01/dbruciaf/mod_dev/GO8_overflows/src/loc_area/loc_area_novf_real_orca12.inp'
+MEs_inp='/net/home/h01/dbruciaf/mod_dev/GO8_overflows/src/loc_area/loc_area_novf_real_cpl.inp'
+
+export MPLBACKEND='Agg'
+python generate_loc_msk.py ${MEs_inp} 
+unset MPLBACKEND
+
