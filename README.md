@@ -50,4 +50,37 @@ The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOS
 
 ### 7. Comparison with GOSI9
 
+#### GOSI9
+<p float="left">
+  <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/zps_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" />
+  <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/sco_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" /> 
+</p>
+
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/zps_section_-10.84451672-71.98049514_-44.081319-56.000932.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/sco_section_-10.84451672-71.98049514_-44.081319-56.000932.png?raw=true" width="400" />
+</p>
+
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/zps_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
+</p>
+
+#### GOSI10
+
+<p float="left">
+  <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/zps_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" />
+  <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/sco_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" /> 
+</p>
+
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/zps_section_-10.84451672-71.98049514_-44.081319-56.000932.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/sco_section_-10.84451672-71.98049514_-44.081319-56.000932.png?raw=true" width="400" />
+</p>
+
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/zps_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
+</p>
+
 ### 8
