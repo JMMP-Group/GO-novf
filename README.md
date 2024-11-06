@@ -21,7 +21,7 @@ python generate_loc_msk.py loc_area_novf_gosi10_025.inp
 As we can see from the `loc_area_novf_gosi10_025.inp` input file, in GOSI10 we use a wider localisation area than in 
 [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893) - here we target the 2930m isobath instead of the 2800m one.
 
-The output of this step is `bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.nc`.
+<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/loc_area/loc_areas_novf.png?raw=true" width="300">
 
 ### 4. Create the envelopes
 ```
