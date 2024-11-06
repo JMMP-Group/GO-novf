@@ -44,9 +44,10 @@ The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOS
 
 ### 6. Horizontal pressure gradient error
 
-<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/hpge_timeseries.png?raw=true" width="500">
-
-<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/maximum_max_hpge_1_MEs_3months.png?raw=true" width="500">
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/hpge_timeseries.png?raw=true" width="500" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/maximum_max_hpge_1_MEs_3months.png?raw=true" width="300">
+</p>
 
 ### 7. Comparison with GOSI9
 
