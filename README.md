@@ -33,7 +33,21 @@ envelopes that are used in GOSI10.
 
 In order to reduce horizontal pressure gradient errors, envelopes are smoothed using the iterative preocedure detailed in Appendix C of [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893), which uses the [Martinho and Batteen (2006)](https://www.sciencedirect.com/science/article/pii/S1463500306000060) smoothing algorithm  to reduce the local slope parameter $r$ below multiple user defined $r_{max}$ values, effectively allowing one to apply distinct level of smoothing in different areas of the model domain. In the case of GOSI10, increasingly more severe $r_{max}$ values were applied only in those grid points where spurious currents were $\geq 0.025$ $m s^{-1}$.
 
+The three months long tests to assess the horizontal pressure gradient (HPG) errors were conducted with the [u-di990@301896](https://code.metoffice.gov.uk/trac/roses-u/browser/d/i/9/9/0/trunk?rev=301896) suite. Since the `u-di990` suite was based on GOSIp1, it didn't include the `key_qco` which is part of GOSI10p2. Therefore, given the importance of the `key_qco`, I reconducted the final HPG test with the [u-dk586@302161](https://code.metoffice.gov.uk/trac/roses-u/browser/d/k/5/8/6/trunk?rev=302161) suite (which is based on GOSI10p2). The suite u-dk586@302161 can replicate the results of u-di990@301896. 
+
 The output of this step is a file including the bathymetry, the localisaztion masks and the envelope surfaces that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region.  
 
-### 5. Generating the vertical grid
-The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool.  
+### 5. Generate the vertical grid
+The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool.
+
+The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOSI10 can be found in [namelists](https://github.com/JMMP-Group/GO-novf/tree/main/src/namelists).
+
+### 6. Horizontal pressure gradient error
+
+<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/hpge_timeseries.png?raw=true" width="500">
+
+<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/maximum_max_hpge_1_MEs_3months.png?raw=true" width="500">
+
+### 7. Comparison with GOSI9
+
+### 8
