@@ -22,14 +22,14 @@ fig_path = './'
 
 # 1. INPUT FILES
 
-vvar = "r0x" # None
+vvar = None #"r0x" # None
 fig_path = './'
 
 # ----- GOSI10
 #domcfg = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
 #          '/data/users/dbruciaf/GOSI10_input_files/p1.0/domcfg_eORCA025_v3.1_r42_cut_novf.nc']
 #fbathy = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
-          None]
+#          None]
 
 # ----- GOSI9
 domcfg = ['/data/users/dbruciaf/OVF/MEs_GOSI9/eORCA025/r12_r12-r075-r040_v3/domain_cfg_r12-r12-r075-r040_v3.nc',
