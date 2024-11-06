@@ -20,6 +20,8 @@ from geopy.distance import great_circle
 from typing import Tuple
 import cartopy.crs as ccrs
 import cartopy.feature as feature
+import cf_xarray
+import xoak
 
 def calc_r0(depth: xr.DataArray) -> xr.DataArray:
     """
@@ -77,66 +79,142 @@ def calc_r0(depth: xr.DataArray) -> xr.DataArray:
 
     return rmax.fillna(0)
 
-def velocity_points_along_zigzag_section(finder, lons, lats, grd='f'):
+def nrst_nghbr(lons, lats, grids: dict, grid: str) -> xr.Dataset:
         """
-        Given the coordinates defining a section, find the corrisponding velocity points
-        along a zigzag section.
+        Given the coordinates defining a section, find the nearest points
+        on a model grid.
 
         Args:
-            finder (obj)        : object created with nsv.SectionFinder() class
             lons (1D array-like): Longitudes defining a section
             lats (1D array-like): Latitudes defining a section
-            grd (string)       : 't' or 'f'
+            grids (dict) : dict of the grids of the model
+            grid (string): Model grid `{"u", "v", "t", "f"}`
 
         Returns:
-            dict: Dictionary mapping u/v grids to their coordinates and indexes.
+            Dataset: Dataset with model coordinates and indexes
         """
 
-        # ZigZag path along the specified grid
-        ds = finder.zigzag_section(lons, lats, grd)
+        grids[grid].xoak.set_index(("lat", "lon"), "sklearn_geo_balltree")
 
-        # Find dimension name
-        dim = list(ds.dims)[0]
-        ds[dim] = ds[dim]
+        return grids[grid].xoak.sel(lat=xr.DataArray(lats), lon=xr.DataArray(lons))
 
-        # Compute diff and find max index of each pair
-        ds_diff = ds.diff(dim)
-        if grd == 'f':
-           ds_roll = ds.rolling({dim: 2}).max().dropna(dim)
+def bresenham_line(x0, x1, y0, y1):
+    '''
+    point0 = (y0, x0), point1 = (y1, x1)
+
+    It determines the points of an n-dimensional raster that should be 
+    selected in order to form a close approximation to a straight line 
+    between two points. Taken from the generalised algotihm on
+
+    http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    '''
+    steep = abs(y1 - y0) > abs(x1 - x0)
+
+    if steep:
+       # swap(x0, y0)
+       t  = y0
+       y0 = x0
+       x0 = t
+       # swap(x1, y1)    
+       t  = y1
+       y1 = x1
+       x1 = t
+
+    if x0 > x1:
+       # swap(x0, x1)
+       t  = x1
+       x1 = x0
+       x0 = t
+       # swap(y0, y1)
+       t  = y1
+       y1 = y0
+       y0 = t
+
+    deltax = np.fix(x1 - x0)
+    deltay = np.fix(abs(y1 - y0))
+    error  = 0.0
+
+    deltaerr = deltay / deltax
+    y = y0
+
+    if y0 < y1:
+       ystep = 1
+    else:
+       ystep = -1
+
+    c=0
+    pi = np.zeros(shape=[x1-x0+1])
+    pj = np.zeros(shape=[x1-x0+1])
+    for x in np.arange(x0,x1+1) :
+        if steep:
+           pi[c]=y
+           pj[c]=x
         else:
-           ds_roll = ds.rolling({dim: 2}).min().dropna(dim)
+           pi[c]=x
+           pj[c]=y
+        error = error + deltaerr
+        if error >= 0.5:
+           y = y + ystep
+           error = error - 1.0
+        c += 1
 
-        # Fill dictionary
-        ds_dict = {}
-        for grid in ("u", "v"):
+    return pj, pi
 
-            # Apply mask
-            if grd == 'f':
-               # Meridional: u - Zonal: v
-               ds = ds_roll.where(
-                       ds_diff[f"{'y' if grid == 'u' else 'x'}_index"], drop=True
-               )
-            else:
-               ds = ds_roll.where(
-                       ds_diff[f"{'x' if grid == 'u' else 'y'}_index"], drop=True
-               )
-            da_dim = ds[dim]
+def get_poly_line_ij(points_i, points_j):
+    '''
+    get_poly_line_ij draw rasterised line between vector-points
+    
+    Description:
+    get_poly_line_ij takes a list of points (specified by 
+    pairs of indexes i,j) and draws connecting lines between them 
+    using the Bresenham line-drawing algorithm.
+    
+    Syntax:
+    line_i, line_j = get_poly_line_ij(points_i, points_i)
+    
+    Input:
+    points_i, points_j: vectors of equal length of pairs of i, j
+                        coordinates that define the line or polyline. The
+                        points will be connected in the order they're given
+                        in these vectors. 
+    Output:
+    line_i, line_j: vectors of the same length as the points-vectors
+                    giving the i,j coordinates of the points on the
+                    rasterised lines. 
+    '''
+    line_i=[]
+    line_j=[]
 
-            if not ds.sizes[dim]:
-                # Empty: either zonal or meridional
-                continue
+    line_n=0
 
-            # Find new lat/lon
-            ds = finder.grids[grid].isel(
-                x=xr.DataArray(ds["x_index"].astype(int), dims=dim),
-                y=xr.DataArray(ds["y_index"].astype(int), dims=dim),
-            )
-            ds = finder.nearest_neighbor(ds["lon"], ds["lat"], grid)
+    if len(points_i) == 1:
+       line_i = points_i
+       line_j = points_j
+    else:
+       for fi in np.arange(len(points_i)-1):
+           # start point of line
+           i1 = points_i[fi]
+           j1 = points_j[fi]
+           # end point of line
+           i2 = points_i[fi+1]
+           j2 = points_j[fi+1]
+           # 'draw' line from i1,j1 to i2,j2
+           pj, pi = bresenham_line(i1,i2,j1,j2)
+           if pi[0] != i1 or pj[0] != j1:
+              # beginning of line doesn't match end point, 
+              # so we flip both vectors
+              pi = np.flipud(pi)
+              pj = np.flipud(pj)
 
-            # Assign coordinate - useful to concatenate u and v after extraction
-            ds_dict[grid] = ds.assign_coords({dim: da_dim - 1})
+           plen = len(pi)
 
-        return ds_dict
+           for PI in np.arange(plen):
+               line_n = PI
+               if len(line_i) == 0 or line_i[line_n-1] != pi[PI] or line_j[line_n-1] != pj[PI]:
+                  line_i.append(int(pi[PI]))
+                  line_j.append(int(pj[PI]))
+
+    return line_j, line_i
 
 def e3_to_dep(e3W: xr.DataArray, e3T: xr.DataArray) -> Tuple[xr.DataArray, ...]:
 
@@ -233,66 +311,6 @@ def compute_masks(ds_domain, merge=False):
     else:
         return masks
 
-def regrid_UV_to_T(daU, daV):
-    U = daU.rolling({'x':2}).mean().fillna(0.)
-    V = daV.rolling({'y':2}).mean().fillna(0.)
-    return U, V
-
-def calc_speed(daU, daV):
-    if "depthu" in daU.dims:
-       daU = daU.rename({"depthu": "z"})
-    if "depthv" in daV.dims:
-       daV = daV.rename({"depthv": "z"})
-    return np.sqrt(daU**2 + daV**2)
-
-def calc_max_vel(daU, daV):
-    return np.maximum(np.nanmax(np.absolute(daU)),np.nanmax(np.absolute(daV)))
-
-def calc_KE(daU, daV):
-    if "depthu" in daU.dims:
-       daU = daU.rename({"depthu": "z"})
-    if "depthv" in daV.dims:
-       daV = daV.rename({"depthv": "z"})
-    return 0.5 * (daU**2 + daV**2)
-
-def calc_vol_avg(da, e1, e2, e3):
-    cel_vol = e1 * e2 * e3
-    dom_vol = cel_vol.sum(skipna=True)
-    if "z" not in da:
-       cel_vol = cel_vol.sum(dim="z",skipna=True)
-    return (cel_vol*da).sum(skipna=True) / dom_vol
-
-def calc_SM03_rhd(dep):
-    '''
-    Shchepetkin & McWilliams (2003) initial 
-    rhd profile.    
-    rhd = (rho - rho0)/rho0
-    '''
-    rho0  = 1026.
-    rn_a0 = 0.1655
-    drho  = 3.0
-    delta = 500.
-    rhd   = -(drho/rho0)*np.exp( -dep/delta )
-    return rhd
-
-def calc_press(dep):
-    drho  = 3.0
-    delta = 500.
-    grav  = 9.80665
-    rho0  = 1026.
-    p0    = (grav * drho * delta) / rho0
-    press =  p0 * (np.exp(-dep/delta)-1.0) 
-    return press
-
-def calc_Fx_from_surf(dep):
-    drho  = 3.0
-    delta = 500.
-    grav  = 9.80665
-    rho0  = 1026.
-    p0    = (grav * drho * delta) / rho0
-    Fx    = - p0 * (dep + delta*(np.exp(-dep/delta)-1.0))
-    return Fx
-
 def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
     new_cmap = colors.LinearSegmentedColormap.from_list(
         'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
@@ -328,122 +346,240 @@ def combine_arrays_alternating_columns(array1, array2):
 
     return combined_array
 
+def FindSec(ds_domcfg, target_lons, target_lats):
+    '''
+    '''
+    # ---------------------------------------------------------
+    # 1. Creating a dict for the grids
+    grids = {}
+    for grid in ("u", "v", "t", "f"):
+        ds = xr.Dataset(
+           coords={
+                   "lon": ds_domcfg[f"glam{grid}"],
+                   "lat": ds_domcfg[f"gphi{grid}"],
+           }
+        )
+        ds = ds.squeeze(drop=True)
+        for key, value in ds.sizes.items():
+            ds[f"{key}_index"] = xr.DataArray(range(value), dims=key)
+        grids[grid] = ds.cf.guess_coord_axis()
+
+    # ---------------------------------------------------------
+    # 2. Find the T-points along the user-defined section
+
+    finder = SectionFinder(ds_domcfg)
+
+    ds_pnt_t = finder.zigzag_section(lons=target_lons,
+                                     lats=target_lats,
+                                     grid='t'
+               )
+
+    # ---------------------------------------------------------
+    # 4. Extract all the U and V points in between those T-points
+
+    # Find dimension name
+    dim = list(ds_pnt_t.dims)[0]
+    ds_pnt_t[dim] = ds_pnt_t[dim]
+
+    # Compute diff and find max index of each pair
+    ds_diff = ds_pnt_t.diff(dim)
+    ds_roll = ds_pnt_t.rolling({dim: 2}).max().dropna(dim)
+
+    ds_dict = {}
+    ds_dict['t'] = ds_pnt_t
+    for grid in ("u", "v"):
+
+        # Apply masks:
+        # Meridional -> v
+        # Zonal -> u
+        if grid == "u":
+           ds = ds_roll.where(
+                   np.logical_and(ds_diff['x_index']!=0, ds_diff['y_index']==0), drop=True
+                )
+        elif grid == "v":
+           ds = ds_roll.where(
+                   np.logical_and(ds_diff['y_index']!=0, ds_diff['x_index']==0), drop=True
+                )
+        da_dim = ds[dim].values
+
+        if not ds.sizes[dim]:
+           # Empty: either zonal or meridional
+           continue
+
+        # Find new lat/lon
+        if grid == "u":
+           sx=-1
+           sy=0
+        elif grid == "v":
+           sx=0
+           sy=-1
+
+        ds = grids[grid].isel(
+                x=xr.DataArray(ds["x_index"].astype(int)+sx, dims=dim),
+                y=xr.DataArray(ds["y_index"].astype(int)+sy, dims=dim),
+             )
+        ds = nrst_nghbr(ds["lon"], ds["lat"], grids, grid)
+
+        # Assign coordinate - useful to concatenate u and v after extraction
+        ds_dict[grid] = ds.assign_coords({dim: da_dim}) # - 1})
+
+    return ds_dict
+
 def extract_section_from_array(ds_domcfg, ds_scalar, vvar, target_lons, target_lats):
+    '''
+    This function extracts T-points along a user defined section 
+    so that the plot will involve cells centered on U, V or F points.  
+    It assumes that variables are defined at T-points.
+    '''
 
     upnt = False
     vpnt = False
 
-    finder = SectionFinder(ds_domcfg)
-    pnts_UV = finder.velocity_points_along_zigzag_section(
-                                    lons=target_lons,
-                                    lats=target_lats,
-              )
-    if "u" in pnts_UV: upnt = True
-    if "v" in pnts_UV: vpnt = True
+    sec_pnts = FindSec(ds_domcfg, target_lons, target_lats)
 
-    pnts_F = finder.zigzag_section(lons=target_lons,
-                                   lats=target_lats,
-                                   grid='f'
-             )
+    #print('sec_pnts', sec_pnts)
 
-    # a) scalar variable interpolated at U- and V-points
+    var2D_T = ds_scalar[vvar].isel(x=sec_pnts['t'].x_index, y=sec_pnts['t'].y_index)*0.0
+
+    if "u" in sec_pnts: upnt = True
+    if "v" in sec_pnts: vpnt = True
+
+    # a) scalar variable interpolated at U-, V- and F-points
+
     if upnt:
-       var3D_TU = ds_scalar[vvar].rolling(x=2).mean().shift(x=-1)
-       var2D_TU = var3D_TU.isel(x=pnts_UV['u'].x_index,
-                                y=pnts_UV['u'].y_index
-                               )
+       var3D_U = ds_scalar[vvar].rolling(x=2).mean().shift(x=-1).fillna(-9999.)
+       var2D_U = var3D_U.isel(x=sec_pnts['u'].x_index,
+                              y=sec_pnts['u'].y_index
+                             )
+    else:
+       # DataArray with Nans
+       var2D_U = xr.DataArray(coords=var2D_T.coords,
+                              dims=var2D_T.dims
+                             )
+
     if vpnt:
-       var3D_TV = ds_scalar[vvar].rolling(y=2).mean().shift(y=-1)
-       var2D_TV = var3D_TV.isel(x=pnts_UV['v'].x_index,
-                                y=pnts_UV['v'].y_index
-                               )
-    if upnt and vpnt:
-       var2D_TUV = xr.concat([var2D_TU, var2D_TV], dim="dim_0")
-    elif upnt and not vpnt:
-       var2D_TUV = var2D_TU.copy()
-    elif not upnt and vpnt:
-       var2D_TUV = var2D_TV.copy()  
+       var3D_V = ds_scalar[vvar].rolling(y=2).mean().shift(y=-1).fillna(-9999.)
+       var2D_V = var3D_V.isel(x=sec_pnts['v'].x_index,
+                              y=sec_pnts['v'].y_index
+                             )
+    else:
+       # DataArray with Nans
+       var2D_V = xr.DataArray(coords=var2D_T.coords,
+                              dims=var2D_T.dims
+                             )
 
-    var2D_TUV = var2D_TUV.reindex({'dim_0':sorted(var2D_TUV.dim_0)})
-    var2D_F = ds_scalar[vvar].isel(x=pnts_F.x_index,y=pnts_F.y_index)*0.0
+    #print('var2D_T', var2D_T)
+    #print('var2D_U' ,var2D_U)
+    #print('var2D_V' ,var2D_V)
 
-    var2D = combine_arrays_alternating_columns(var2D_F, var2D_TUV)
+    var2D_UV = xr.concat([var2D_U, var2D_V], dim="dim_0").dropna(dim="dim_0")
+    var2D_UV = var2D_UV.reindex({'dim_0':sorted(var2D_UV.dim_0)})
+    var2D_UV = var2D_UV.where(var2D_UV!=-9999.)
+
+    #print(var2D_UV)
+
+    var2D = combine_arrays_alternating_columns(var2D_T, var2D_UV)
   
     # b) depths of T- and W-levels
-    gdepf  = ds_domcfg["gdepf_0"].isel(x=pnts_F.x_index, y=pnts_F.y_index)
-    gdepfw = ds_domcfg["gdepfw_0"].isel(x=pnts_F.x_index, y=pnts_F.y_index)
 
+    # Points on the corners of the cells
+    gdept = ds_domcfg["gdept_0"].isel(x=sec_pnts['t'].x_index,
+                                      y=sec_pnts['t'].y_index
+                                     )
+    gdepw = ds_domcfg["gdepw_0"].isel(x=sec_pnts['t'].x_index,
+                                      y=sec_pnts['t'].y_index
+                                     )
+
+    # Points in the middle of the cells
     if upnt:
-       gdepu  = ds_domcfg["gdepu_0"].isel(x=pnts_UV['u'].x_index,
-                                          y=pnts_UV['u'].y_index
-                                         )
-       gdepuw = ds_domcfg["gdepuw_0"].isel(x=pnts_UV['u'].x_index,
-                                           y=pnts_UV['u'].y_index
+       gdepu = ds_domcfg["gdepu_0"].isel(x=sec_pnts['u'].x_index,
+                                         y=sec_pnts['u'].y_index
+                                        )
+       gdepuw = ds_domcfg["gdepuw_0"].isel(x=sec_pnts['u'].x_index,
+                                           y=sec_pnts['u'].y_index
                                           )
+    else:
+       gdepu = xr.DataArray(coords=gdept.coords,
+                            dims=gdept.dims
+                           )
+       gdepuw = xr.DataArray(coords=gdepw.coords,
+                             dims=gdepw.dims
+                            )
     if vpnt:
-       gdepv  = ds_domcfg["gdepv_0"].isel(x=pnts_UV['v'].x_index,
-                                          y=pnts_UV['v'].y_index
+       gdepv  = ds_domcfg["gdepv_0"].isel(x=sec_pnts['v'].x_index,
+                                          y=sec_pnts['v'].y_index
                                          )
-       gdepvw = ds_domcfg["gdepvw_0"].isel(x=pnts_UV['v'].x_index,
-                                           y=pnts_UV['v'].y_index
+       gdepvw = ds_domcfg["gdepvw_0"].isel(x=sec_pnts['v'].x_index,
+                                           y=sec_pnts['v'].y_index
                                           )
-    
-    if upnt and vpnt:
-       gdepuv = xr.concat([gdepu, gdepv], dim="dim_0")
-       gdepuvw = xr.concat([gdepuw, gdepvw], dim="dim_0")
-    elif upnt and not vpnt:
-       gdepuv = gdepu.copy()
-       gdepuvw = gdepuw.copy()
-    elif not upnt and vpnt:
-       gdepuv = gdepv.copy()
-       gdepuvw = gdepvw.copy()
+    else:
+       gdepv = xr.DataArray(coords=gdept.coords,
+                            dims=gdept.dims
+                           )
+       gdepvw = xr.DataArray(coords=gdepw.coords,
+                             dims=gdepw.dims
+                            )
 
+    gdepuv = xr.concat([gdepu, gdepv], dim="dim_0").dropna(dim='dim_0')
     gdepuv = gdepuv.reindex({'dim_0':sorted(gdepuv.dim_0)})
+    gdepuvw = xr.concat([gdepuw, gdepvw], dim="dim_0").dropna(dim='dim_0')
     gdepuvw = gdepuvw.reindex({'dim_0':sorted(gdepuvw.dim_0)})
 
-    gdepcw = combine_arrays_alternating_columns(gdepfw, gdepuvw)
-    gdepc  = combine_arrays_alternating_columns(gdepf, gdepuv)
+    # Combining
+    gdepcw = combine_arrays_alternating_columns(gdepw, gdepuvw)
+    gdepc  = combine_arrays_alternating_columns(gdept, gdepuv)
 
     gdepw_1d = ds_domcfg["gdepw_1d"]
 
     # c) distance along the section
-    glamf = ds_domcfg["glamf"].isel(x=pnts_F.x_index, y=pnts_F.y_index)
-    gphif = ds_domcfg["gphif"].isel(x=pnts_F.x_index, y=pnts_F.y_index)
+    glamt = ds_domcfg["glamt"].isel(x=sec_pnts['t'].x_index,
+                                    y=sec_pnts['t'].y_index
+                                   )
+    gphit = ds_domcfg["gphit"].isel(x=sec_pnts['t'].x_index,
+                                    y=sec_pnts['t'].y_index
+                                   )
 
     if upnt:
-       glamu = ds_domcfg["glamu"].isel(x=pnts_UV['u'].x_index,
-                                       y=pnts_UV['u'].y_index
+       glamu = ds_domcfg["glamu"].isel(x=sec_pnts['u'].x_index,
+                                       y=sec_pnts['u'].y_index
                                       )
-       gphiu = ds_domcfg["gphiu"].isel(x=pnts_UV['u'].x_index,
-                                       y=pnts_UV['u'].y_index
+       gphiu = ds_domcfg["gphiu"].isel(x=sec_pnts['u'].x_index,
+                                       y=sec_pnts['u'].y_index
                                       )
+    else:
+       glamu = xr.DataArray(coords=glamt.coords,
+                            dims=glamt.dims
+                           )
+       gphiu = xr.DataArray(coords=gphit.coords,
+                            dims=gphit.dims
+                           )
     if vpnt:
-       glamv = ds_domcfg["glamv"].isel(x=pnts_UV['v'].x_index,
-                                       y=pnts_UV['v'].y_index
+       glamv = ds_domcfg["glamv"].isel(x=sec_pnts['v'].x_index,
+                                       y=sec_pnts['v'].y_index
                                       )
-       gphiv = ds_domcfg["gphiv"].isel(x=pnts_UV['v'].x_index,
-                                       y=pnts_UV['v'].y_index
+       gphiv = ds_domcfg["gphiv"].isel(x=sec_pnts['v'].x_index,
+                                       y=sec_pnts['v'].y_index
                                       )
-    if upnt and vpnt:
-       glamuv = xr.concat([glamu, glamv], dim="dim_0")
-       gphiuv = xr.concat([gphiu, gphiv], dim="dim_0")
-    elif upnt and not vpnt:
-       glamuv = glamu.copy()
-       gphiuv = gphiu.copy()
-    elif not upnt and vpnt:
-       glamuv = glamv.copy()
-       gphiuv = gphiv.copy()
+    else:
+       glamv = xr.DataArray(coords=glamt.coords,
+                            dims=glamt.dims
+                           )
+       gphiv = xr.DataArray(coords=gphit.coords,
+                            dims=gphit.dims
+                           )
 
+    glamuv = xr.concat([glamu, glamv], dim="dim_0").dropna(dim='dim_0')
     glamuv = glamuv.reindex({'dim_0':sorted(glamuv.dim_0)})
+    gphiuv = xr.concat([gphiu, gphiv], dim="dim_0").dropna(dim='dim_0')
     gphiuv = gphiuv.reindex({'dim_0':sorted(gphiuv.dim_0)})
 
-    min_length = min(len(glamf), len(glamuv))
-    glamc = [val for pair in zip(glamf, glamuv) for val in pair]
-    glamc.extend(glamf[min_length:])
+    min_length = min(len(glamt), len(glamuv))
+    glamc = [val for pair in zip(glamt, glamuv) for val in pair]
+    glamc.extend(glamt[min_length:])
     glamc.extend(glamuv[min_length:])
 
-    gphic = [val for pair in zip(gphif, gphiuv) for val in pair]
-    gphic.extend(gphif[min_length:])
+    gphic = [val for pair in zip(gphit, gphiuv) for val in pair]
+    gphic.extend(gphit[min_length:])
     gphic.extend(gphiuv[min_length:])
 
     distc = [0]
@@ -452,38 +588,42 @@ def extract_section_from_array(ds_domcfg, ds_scalar, vvar, target_lons, target_l
         distc.append(distc[-1] + great_circle(*coords).km)
     distc = xr.DataArray(
          distc,
-         dims={'dim_0':range(len(distc))},
+         dims={'points':range(len(distc))},
          attrs={"long_name": "distance along transect", "units": "km"},
     )
     distc = distc.expand_dims({"z": gdepuv.shape[0]})
 
     # e) localisation mask if needed
     if "loc_msk" in ds_domcfg.variables:
-       loc_msk_F = ds_domcfg["loc_msk"].isel(x=pnts_F.x_index, y=pnts_F.y_index)*0.0
+       loc_msk_T = ds_domcfg["loc_msk"].isel(x=sec_pnts['t'].x_index, 
+                                             y=sec_pnts['t'].y_index)*0.0
        if upnt:
           loc_msk_U = ds_domcfg["loc_msk"].rolling(x=2).mean().shift(x=-1)
           loc_msk_U = loc_msk_U.where(loc_msk_U==0.,1.)
-          loc_msk_U = loc_msk_U.isel(x=pnts_UV['u'].x_index,
-                                     y=pnts_UV['u'].y_index
+          loc_msk_U = loc_msk_U.isel(x=sec_pnts['u'].x_index,
+                                     y=sec_pnts['u'].y_index
                                     )
+       else:
+          loc_msk_U = xr.DataArray(coords=loc_msk_T.coords,
+                                   dims=loc_msk_T.dims
+                                  )
        if vpnt:
           loc_msk_V = ds_domcfg["loc_msk"].rolling(y=2).mean().shift(y=-1)
           loc_msk_V = loc_msk_V.where(loc_msk_V==0.,1.)
-          loc_msk_V = loc_msk_V.isel(x=pnts_UV['v'].x_index,
-                                     y=pnts_UV['v'].y_index
+          loc_msk_V = loc_msk_V.isel(x=sec_pnts['v'].x_index,
+                                     y=sec_pnts['v'].y_index
                                     )
-       if upnt and vpnt:
-          loc_msk_UV = xr.concat([loc_msk_U, loc_msk_V], dim="dim_0")
-       elif upnt and not vpnt:
-          loc_msk_UV = loc_msk_U.copy()
-       elif not upnt and vpnt:
-          loc_msk_UV = loc_msk_V.copy()
+       else:
+          loc_msk_V = xr.DataArray(coords=loc_msk_T.coords,
+                                   dims=loc_msk_T.dims
+                                  )
 
+       loc_msk_UV = xr.concat([loc_msk_U, loc_msk_V], dim="dim_0").dropna(dim='dim_0')
        loc_msk_UV = loc_msk_UV.reindex({'dim_0':sorted(loc_msk_UV.dim_0)})
-       
-       min_length = min(len(loc_msk_F), len(loc_msk_UV))
-       loc_msk = [val for pair in zip(loc_msk_F, loc_msk_UV) for val in pair]
-       loc_msk.extend(loc_msk_F[min_length:])
+
+       min_length = min(len(loc_msk_T), len(loc_msk_UV))
+       loc_msk = [val for pair in zip(loc_msk_T, loc_msk_UV) for val in pair]
+       loc_msk.extend(loc_msk_T[min_length:])
        loc_msk.extend(loc_msk_UV[min_length:])
 
     # g) envelopes if needed
@@ -498,7 +638,7 @@ def prepare_domcfg(domcfg,fbathy=None):
 
     # Loading domain geometry
     ds_dom = xr.open_dataset(domcfg, drop_variables=("x", "y","nav_lev")).squeeze()
-    ds_dom = ds_dom.rename({"nav_lev": "z"})
+    if "nav_lev" in ds_dom.dims: ds_dom = ds_dom.rename({"nav_lev": "z"})
     # Computing land-sea masks
     ds_dom = compute_masks(ds_dom, merge=True)
     # cCompute e3fw scale factors
@@ -516,7 +656,10 @@ def prepare_domcfg(domcfg,fbathy=None):
         if ds_dom["ln_"+vcr] == 1: vcoor = vcr
 
     # Checking if localisation has been applied
-    ds_dom["loc_msk"] = ds_dom.bathy_metry * 0.
+    if 'bathy_metry' in ds_dom.variables:
+       ds_dom["loc_msk"] = ds_dom.bathy_metry * 0.
+    elif 'bathy_meter' in ds_dom.variables:
+       ds_dom["loc_msk"] = ds_dom.bathy_meter * 0.
     if fbathy:
        ds_bat  = xr.open_dataset(fbathy, drop_variables=("x", "y")).squeeze()
        ds_dom["loc_msk"].values = ds_bat.s2z_msk.values
@@ -556,7 +699,7 @@ def plot_sec(fig_name, fig_path, ds_domcfg, ds_scalar, vvar, target_lons, target
  
     # Plotting ----------------------------------------------------------
 
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(54, 34))
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(54, 34), dpi=100)
     plt.sca(ax) # Set the current Axes to ax and the current Figure to the parent of ax.
     ax.invert_yaxis()
     if vvar == 'dummy':
@@ -577,13 +720,13 @@ def plot_sec(fig_name, fig_path, ds_domcfg, ds_scalar, vvar, target_lons, target
 
     for k in range(0,nk-1):
         for i in range(1, ni-1, 2):
-            x = [distc[k  , i-1], # F_(k,i-1)
-                 distc[k  , i  ], # UV_(k,i)
-                 distc[k  , i+1], # F_(k,i+1)
-                 distc[k+1, i+1], # F_(k+1,i+1)
-                 distc[k+1, i  ], # UV_(k+1,i)
-                 distc[k+1, i-1], # F_(k+1,i)
-                 distc[k  , i-1]] # F_(k  ,i)
+            x = [distc[k  , i-1], # T (k  ,i-1)
+                 distc[k  , i  ], # UV(k  ,i  )
+                 distc[k  , i+1], # T (k  ,i+1)
+                 distc[k+1, i+1], # T (k+1,i+1)
+                 distc[k+1, i  ], # UV(k+1,i  )
+                 distc[k+1, i-1], # T (k+1,i-1)
+                 distc[k  , i-1]] # T_(k  ,i-1)
 
             if loc_msk[i] == 0:
                #y = [np.max([gdepcw[k  ,i-1], gdepcw[k  ,i  ]]),

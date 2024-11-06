@@ -22,13 +22,22 @@ fig_path = './'
 
 # 1. INPUT FILES
 
-vvar = None #"r0x"
+vvar = "r0x" # None
 fig_path = './'
 
-domcfg = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
-          '/data/users/dbruciaf/GOSI10_input_files/p1.0/domcfg_eORCA025_v3.1_r42_cut_novf.nc']
-fbathy = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
+# ----- GOSI10
+#domcfg = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
+#          '/data/users/dbruciaf/GOSI10_input_files/p1.0/domcfg_eORCA025_v3.1_r42_cut_novf.nc']
+#fbathy = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
           None]
+
+# ----- GOSI9
+domcfg = ['/data/users/dbruciaf/OVF/MEs_GOSI9/eORCA025/r12_r12-r075-r040_v3/domain_cfg_r12-r12-r075-r040_v3.nc',
+          '/data/users/dbruciaf/OVF/GOSI9-eORCA025/domcfg_eORCA025_v3.nc'
+         ]
+fbathy = ['/data/users/dbruciaf/OVF/MEs_GOSI9/eORCA025/r12_r12-r075-r040_v3/bathymetry.loc_area.dep2800_novf_sig1_stn9_itr1.MEs_gosi9_4env_2800_r12_r12-r075-r040_v3.nc',
+          None
+         ]
 
 # Define the section we want to plot:
 list_sec = [
@@ -36,6 +45,8 @@ list_sec = [
              'lat':[68.26346438, 65.49039963, 60.79252542, 56.24488972,  52.858934]}, # Iceland-Faroe Ridge
             {'lon':[-10.84451672, -25.30818606, -35., -44.081319] , 
              'lat':[71.98049514,  66.73449533,  61.88833838,  56.000932]}, # Denmark Strait
+            {'lon':[-0.7549, -22.222, -24.9836, -28.4769, -44.081319] ,
+             'lat':[70.528, 68.5597,  67.1603,  65.4224,  56.000932]}, # Denmark Strait new
             #{'lon':[-43.23, -0.61] ,
             # 'lat':[ 62.33, 62.20]}
             #{'lon':[-35.5961, -34.8232] ,
