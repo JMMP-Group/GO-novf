@@ -32,4 +32,4 @@ where `inp_file=MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.in
 envelopes that are used in GOSI10. 
 
 As explained in Appendix C of [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893), the envelopes are smoothed for 
-with an iterative algorithm that ensures that the slope parameter is smaller than multiple user defined threshold $r_{max}$. 
+with an iterative algorithm that ensures that the slope parameter is smaller than multiple user defined threshold $r_{max}$. test
