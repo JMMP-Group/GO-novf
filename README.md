@@ -98,6 +98,15 @@ The strange canyon that can be seen in the first sections of GOSI9 are due to th
 
 Because of the way NEMO interpolates the T&S fields passed in input when initialising from rest (`ln_tsd_init=.true.`), the following two important point MUST be considered when initilising a model with localised ME levels (`ln_sco=.true.` and `ln_loczgr=.true.`):
 
-1) 
+1) Since the land-sea mask will be different in the localisation area, The T&S used to initialise the model should be flooded, i.e., continents should be filled with value from the ocean to avoid issue when interpolating in the vertical.
 
-2) 
+2) When using local GVC s-coord, the last level must be a copy of previous level:
+```
+ori_S=woa13v2.omip-clim.abs_sal_gosi10p1-025_flooded.nc
+new_S=woa13v2.omip-clim.abs_sal_gosi10p1-025_flooded.MEs.nc
+ori_T=woa13v2.omip-clim.con_tem_gosi10p1-025_flooded.nc
+new_T=woa13v2.omip-clim.con_tem_gosi10p1-025_flooded.MEs.nc
+
+ncap2 -O -s 'so_abs(:,74,:,:)=so_abs(:,73,:,:)' ${ori_S} ${new_S}
+ncap2 -O -s 'thetao_con(:,74,:,:)=thetao_con(:,73,:,:)' ${ori_T} ${new_T}
+``` 
