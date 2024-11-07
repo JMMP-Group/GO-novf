@@ -23,6 +23,8 @@ As we can see from the `loc_area_novf_gosi10_025.inp` input file, in GOSI10 we u
 
 <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/loc_area/loc_areas_novf.png?raw=true" width="300">
 
+The output of this step is a file including the bathymetry and the localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the file for `GOSI10@1/4` can be found at ADD ZENODO ARCHIVE!!!
+
 ### 4. Create the envelopes
 ```
 cd ../envelopes/
@@ -35,12 +37,16 @@ In order to reduce horizontal pressure gradient errors, envelopes are smoothed u
 
 The three months long tests to assess the horizontal pressure gradient (HPG) errors were conducted with the [u-di990@301896](https://code.metoffice.gov.uk/trac/roses-u/browser/d/i/9/9/0/trunk?rev=301896) suite. Since the `u-di990` suite was based on GOSIp1, it didn't include the `key_qco` which is part of GOSI10p2. Therefore, given the importance of the `key_qco`, I reconducted the final HPG test with the [u-dk586@302161](https://code.metoffice.gov.uk/trac/roses-u/browser/d/k/5/8/6/trunk?rev=302161) suite (which is based on GOSI10p2). The suite u-dk586@302161 can replicate the results of u-di990@301896. 
 
-The output of this step is a file including the bathymetry, the localisaztion masks and the envelope surfaces that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region.  
+All the input files needed to generate and optimise the envelopes can be found here: ADD ZENODO ARCHIVE!!!
+
+The output of this step is a file including the bathymetry, the localisaztion masks and the envelope surfaces that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the file for `GOSI10@1/4` can be found at ADD ZENODO ARCHIVE!!!  
 
 ### 5. Generate the vertical grid
 The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool.
 
 The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOSI10 can be found in [namelists](https://github.com/JMMP-Group/GO-novf/tree/main/src/namelists).
+
+The output of this step is a domain_cfg.nc file - the file for `GOSI10@1/4` can be found at ADD ZENODO ARCHIVE!!!
 
 ### 6. Horizontal pressure gradient error
 
