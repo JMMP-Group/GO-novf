@@ -57,7 +57,7 @@ The output of this step is a domain_cfg.nc file - the file for `GOSI10@1/4` can 
 
 ### 7. Comparison with GOSI9
 
-#### GOSI9
+#### GOSI9 --------------------------
 <p float="left">
   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/zps_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" />
   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/sco_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" /> 
@@ -73,7 +73,7 @@ The output of this step is a domain_cfg.nc file - the file for `GOSI10@1/4` can 
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
 
-#### GOSI10
+#### GOSI10 --------------------------
 
 <p float="left">
   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/zps_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" />
@@ -90,4 +90,14 @@ The output of this step is a domain_cfg.nc file - the file for `GOSI10@1/4` can 
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
 
-### 8
+The strange canyon that can be seen in the first sections of GOSI9 are due to the fact that in the case of GOSI9 the bathymetry has been modified by hand as shown in the following map:
+
+<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/gosi9_model_bathymetry.png?raw=true" width="400">
+
+### 8. INITIAL CONDITION FOR GOSI WITH LOCALALISED ME s-coordinates
+
+Because of the way NEMO interpolates the T&S fields passed in input when initialising from rest (`ln_tsd_init=.true.`), the following two important point MUST be considered when initilising a model with localised ME levels (`ln_sco=.true.` and `ln_loczgr=.true.`):
+
+1) 
+
+2) 
