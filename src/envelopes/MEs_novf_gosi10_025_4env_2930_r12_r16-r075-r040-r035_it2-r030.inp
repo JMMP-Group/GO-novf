@@ -58,7 +58,7 @@
 # A) IINPUT FILES
 
 # Bathymetry of the domain
-bathyFile = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.nc'
+bathyFile = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test_bathy_dig_smooth/Diegos/edits_20241213/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.nc'
 
 # Horizontal grid of the domain
 hgridFile = '/data/users/dbruciaf/GOSI10_input_files/p1.0/domcfg_eORCA025_v3.1_r42.nc'
@@ -98,11 +98,11 @@ e_tap_equ = False
 # Use an empty list if you don't want to apply local smoothing to a particular envelope.
 e_loc_vel = [ [],
               [],
-              ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16.nc',
-               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16-r075.nc',
-               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16-r075-r040.nc',
-               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16-r075-r040-r035_it1.nc',
-               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16-r075-r040-r035_it2.nc'
+              ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/r12_r16/maximum_hpge_r12_r16.nc',
+               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/r12_r16/maximum_hpge_r12_r16-r075.nc',
+               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/r12_r16/maximum_hpge_r12_r16-r075-r040.nc',
+               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/r12_r16/maximum_hpge_r12_r16-r075-r040-r035_it1.nc',
+               '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/r12_r16/maximum_hpge_r12_r16-r075-r040-r035_it2.nc'
               ],
               [] ]
 

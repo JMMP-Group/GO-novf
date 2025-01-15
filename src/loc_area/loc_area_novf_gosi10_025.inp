@@ -5,7 +5,7 @@
 # A) INPUT FILES
 
 # *) Bathymetry of the domain
-bathyFile = '/data/users/dbruciaf/GOSI10_input_files/p1.0/bathy_eORCA025_noclosea_from_GEBCO2021_FillZero_S21TT_CloseaCopy_edits-20220404_r42.nc'
+bathyFile = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test_bathy_dig_smooth/Diegos/edits_20241213/bathy_eORCA025_noclosea_from_GEBCO2021_FillZero_S21TT_CloseaCopy_edits-20220404-20241213_r42.nc'
 
 # *) Horizontal grid of the domain
 hgridFile = '/data/users/dbruciaf/GOSI10_input_files/p1.0/coordinates_eORCA025_r42.nc'

@@ -27,10 +27,11 @@ from lib import compute_masks
 # ==============================================================================
 
 # Folder path containing HPGE spurious currents velocity files 
-MAINdir = '/scratch/dbruciaf/GOSI10p1.0-hpge/'
-HPGElst = 'r12_r16-r075-r040-r035_it2-r030'
-DOMCFG  = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc'
-loc_msk = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2.nc'
+MAINdir = '/scratch/dbruciaf/GOSI10p2.0-hpge/'
+HPGElst = 'u-dl766'
+DOMCFG  = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test_bathy_dig_smooth/Diegos/edits_20241213/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc'
+loc_msk = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test_bathy_dig_smooth/Diegos/edits_20241213/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.nc'
+
 
 label = 'MEs'
 
@@ -40,9 +41,6 @@ Vvar = 'vo'
 # Name of the variable to chunk with dask and size of chunks
 chunk_var = 'time_counter'
 chunk_size = 1
-
-#cols = ["red","blue","dodgerblue","limegreen"]
-cols = ["limegreen"]
 
 # ==============================================================================
 # loc msk
