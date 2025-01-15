@@ -634,7 +634,7 @@ def extract_section_from_array(ds_domcfg, ds_scalar, vvar, target_lons, target_l
 
     return var2D, distc, gdepcw, gdepc, gdepw_1d, loc_msk, hbatt
 
-def prepare_domcfg(domcfg,fbathy=None):
+def prepare_domcfg(domcfg, fbathy=None, cut_lims=None):
 
     # Loading domain geometry
     ds_dom = xr.open_dataset(domcfg, drop_variables=("x", "y","nav_lev")).squeeze()
@@ -669,10 +669,17 @@ def prepare_domcfg(domcfg,fbathy=None):
        else:
           ds_dom["loc_msk"][:,:] = 0.
 
+    if cut_lims:
+       ds_dom = ds_dom.isel({'x':slice(cut_lims[0],cut_lims[1]),
+                             'y':slice(cut_lims[2],cut_lims[3])})
+
     # Checking if we are using a ME system
     hbatt = []
     if vcoor == "sco" and fbathy:
        ds_bat  = xr.open_dataset(fbathy, drop_variables=("x", "y")).squeeze()
+       if cut_lims:
+          ds_bat = ds_bat.isel({'x':slice(cut_lims[0],cut_lims[1]),
+                                'y':slice(cut_lims[2],cut_lims[3])})
        nenv = 1
        while nenv > 0:
          name_env = "hbatt_"+str(nenv)
