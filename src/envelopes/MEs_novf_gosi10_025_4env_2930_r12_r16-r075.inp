@@ -98,7 +98,7 @@ e_tap_equ = False
 # Use an empty list if you don't want to apply local smoothing to a particular envelope.
 e_loc_vel = [ [],
               [],
-              ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16.nc'],
+              ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/r12_r16/maximum_hpge_r12_r16.nc'],
               [] ]
 
 e_loc_var = [ [], [], ['max_hpge_1'], [] ]
