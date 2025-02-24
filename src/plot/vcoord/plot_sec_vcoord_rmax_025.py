@@ -27,7 +27,7 @@ fig_path = './'
 
 # ----- GOSI10
 #domcfg = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
-#          '/data/users/dbruciaf/GOSI10_input_files/p1.0/domcfg_eORCA025_v3.1_r42_cut_novf.nc']
+#          '/data/users/dbruciaf/GOSI10_input_files/p1.0/domcfg_eORCA025_v3.1_r42.nc']
 #fbathy = ['/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/conf_ok/bathymetry.loc_area-nord_ovf_025.dep2930_sig1_stn9_itr1.MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc',
 #          None]
 
@@ -59,6 +59,11 @@ list_sec = [
             # 'lat':[ 72.0003,  70.9567]}, # j = 1058
            ]
 
+list_idx = [
+            {'i':[ 1073, 1105] ,
+             'j':[  992,  987]}
+           ]
+
 # ==============================================================================
 
 for exp in range(len(domcfg)):
@@ -87,10 +92,32 @@ for exp in range(len(domcfg)):
                 "gphit"   , "gphiu"   , "gphiv"   , "gphif"   ,
                 "gdepw_1d", "loc_msk" , vvar]
 
-    for coord_sec in list_sec:
+    #for coord_sec in list_sec:
+    #
+    #    sec_lon = coord_sec['lon']
+    #    sec_lat = coord_sec['lat']
+    #
+    #    print ('section through lon:', sec_lon)
+    #    print ('                lat:', sec_lat)
+    #
+    #    ds_sec = ds_dom[var_list]
+    #    ds_var = ds_dom[var_list]
+    #
+    #    sec_name = str(sec_lon[0])+'-'+str(sec_lat[0])+'_'+str(sec_lon[-1])+'-'+str(sec_lat[-1])
+    #
+    #    if vvar == "dummy":
+    #       fig_name = vcoor+'_section_'+sec_name+'.png'
+    #    else:
+    #       fig_name = vcoor+'_section_'+vvar+'_'+sec_name+'.png'
+    #    plot_sec(fig_name, fig_path, ds_sec, ds_var, vvar, sec_lon, sec_lat, hbatt, imap=True)
 
-        sec_lon = coord_sec['lon']
-        sec_lat = coord_sec['lat']
+    for indx_sec in list_idx:
+
+        sec_lon = []
+        sec_lat = []
+        for n in range(len(indx_sec['i'])):
+            sec_lon.append(ds_dom.glamt.data[indx_sec['j'][n],indx_sec['i'][n]])
+            sec_lat.append(ds_dom.gphit.data[indx_sec['j'][n],indx_sec['i'][n]])
 
         print ('section through lon:', sec_lon)
         print ('                lat:', sec_lat)
@@ -105,4 +132,3 @@ for exp in range(len(domcfg)):
         else:
            fig_name = vcoor+'_section_'+vvar+'_'+sec_name+'.png'
         plot_sec(fig_name, fig_path, ds_sec, ds_var, vvar, sec_lon, sec_lat, hbatt, imap=True)
-
