@@ -1,0 +1,23 @@
+# ==========================================================================
+# INPUT FILE TO SETUP A LOCALISED VERTICAL COORDINATE SYSTEM               |
+# ==========================================================================
+
+# A) INPUT FILES
+
+# *) Bathymetry of the domain
+bathyFile = '/data/users/dbruciaf/GOSI10_input_files/eORCA12/p1.0/bathy_eORCA12_noclosea_from_GEBCO2021_FillZero_S21TT_CloseaCopy_r42.nc'
+
+# *) Horizontal grid of the domain
+hgridFile = '/data/users/dbruciaf/GOSI10_input_files/eORCA12/p1.0/eORCA12_coordinates_r42.nc'
+
+# B) LOCALISATION AREA: parameters to identify
+#    limits of localisation area
+loc_isobt = 2930.
+loc_area  = 'nord_ovf_12' # stem to be used in the output files name
+
+# c) TRANSITION AREA: parameters for Gaussian filtering 
+#    to identify limits of transition area
+s2z_factr = 1.e-10
+s2z_sigma = 2
+s2z_stenc = 9
+s2z_itera = 4

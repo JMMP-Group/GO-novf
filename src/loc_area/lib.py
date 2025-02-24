@@ -630,8 +630,12 @@ def generate_loc_area_novf(bathy, max_dep):
     msk = s_msk.data
 
     # iceland
-    i_start = 1065
-    j_start = 1010
+    if bathy.shape == (1206,1440):
+       i_start = 1065
+       j_start = 1010
+    elif bathy.shape == (3605,4320):
+       i_start = 3200
+       j_start = 3010
 
     msk_fill = floodfill(msk, j_start, i_start, msk_val, -1.)
     msk_fill *= -1

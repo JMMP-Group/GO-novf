@@ -3,8 +3,9 @@
 #SBATCH --qos=normal                
 #SBATCH --mem=150000                    
 #SBATCH --ntasks=8                   
-#SBATCH --output=hpge_orca025.out       
+#SBATCH --output=hpge_orca12.out       
 #SBATCH --time=360                    
 
-python create_2D_hpge_field.py
+python create_2D_hpge_field_orca12.py 
+#python create_2D_hpge_field.py
 
