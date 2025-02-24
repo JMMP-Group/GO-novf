@@ -55,8 +55,8 @@ The output of this step is a domain_cfg.nc file - the files for `GOSI10@1/4` and
 Left is `GOSI10@1/4`, right `GOSI10@1/12`.
 
 <p float="left">
-   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/eORCA025/hpge_timeseries.png?raw=true" width="500" />
-   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/eORCA12/hpge_timeseries.png?raw=true" width="500" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/eORCA025/hpge_timeseries.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/eORCA12/hpge_timeseries.png?raw=true" width="400" />
 </p>
 
 <p float="left">
