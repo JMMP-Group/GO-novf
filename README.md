@@ -99,6 +99,23 @@ Left is `GOSI10@1/4`, right `GOSI10@1/12`.
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_025/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
 
+#### GOSI10 - eORCA12 --------------------------
+
+<p float="left">
+  <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/zps_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" />
+  <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/sco_section_-0.7549-70.528_-44.081319-56.000932.png?raw=true" width="400" /> 
+</p>
+
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/zps_section_-10.84451672-71.98049514_-44.081319-56.000932.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/sco_section_-10.84451672-71.98049514_-44.081319-56.000932.png?raw=true" width="400" />
+</p>
+
+<p float="left">
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/zps_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
+   <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
+</p>
+
 The strange canyon that can be seen in the first sections of GOSI9 are due to the fact that in the case of GOSI9 the bathymetry has been modified by hand as shown in the following map:
 
 <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/orca_025/gosi9_model_bathymetry.png?raw=true" width="400">
