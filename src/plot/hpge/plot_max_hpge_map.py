@@ -32,8 +32,22 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
 # 1. INPUT FILES
 
 vcoord = ['MEs']
-DOMCFG_file = ["/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc"]
-HPGE_list = ["/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16-r075-r040-r035_it2-r030.nc"]
+config = 'eorca12'
+
+if config == 'eorca025':
+   DOMCFG_file = ["/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/domain_cfg_MEs_novf_4env_2930_r12_r16-r075-r040-r035_it2-r030.nc"]
+   HPGE_list = ["/data/users/dbruciaf/GOSI10_input_files/MEs_novf/025/test/maximum_hpge_r12_r16-r075-r040-r035_it2-r030.nc"]
+   imin = 880 
+   imax = 1200
+   jmin = 880
+   jmax = 1140
+elif config == 'eorca12':
+   DOMCFG_file = ["/data/users/dbruciaf/GOSI10_input_files/eORCA12/MEs_novf/domain_cfg_12_MEs_novf_4env_2930_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.nc"]
+   HPGE_list = ["/data/users/dbruciaf/GOSI10_input_files/eORCA12/MEs_novf/maximum_hpge_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.nc"]
+   imin = 2900
+   imax = 3400
+   jmin = 2700
+   jmax = 3250
 
 # 3. PLOT
 lon0 = -45.
@@ -58,11 +72,9 @@ for vco in range(len(vcoord)):
 
     # Extracting only the part of the domain we need
 
-    ds_dom  = ds_dom.isel(x_c=slice(880,1200),x_f=slice(880,1200),
-                          y_c=slice(880,1140),y_f=slice(880,1140))
-    #ds_dom = ds_dom.isel(x_c=slice(920,1220), x_f=slice(920,1220), 
-    #                     y_c=slice(905,1140), y_f=slice(905,1140))
-    ds_hpge =  ds_hpge.isel(x=slice(880,1200),y=slice(880,1140))
+    ds_dom  = ds_dom.isel(x_c=slice(imin,imax),x_f=slice(imin,imax),
+                          y_c=slice(jmin,jmax),y_f=slice(jmin,jmax))
+    ds_hpge = ds_hpge.isel(x=slice(imin,imax),y=slice(jmin,jmax))
 
     # Plotting ----------------------------------------------------------
 

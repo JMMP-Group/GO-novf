@@ -24,9 +24,15 @@ import xarray as xr
 # ==============================================================================
 
 # Folder path containing HPGE spurious currents velocity files 
-MAINdir = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf'
-HPGElst = '025/test'
-FileVel = 'hpge_timeseries_r12_r12-r075-r040-r035_it2-r030.nc'
+# eORCA025
+#MAINdir = '/data/users/dbruciaf/GOSI10_input_files/MEs_novf'
+#HPGElst = '025/test'
+#FileVel = 'hpge_timeseries_r12_r12-r075-r040-r035_it2-r030.nc'
+
+# eORCA12
+MAINdir = '/data/users/dbruciaf/GOSI10_input_files/eORCA12/MEs_novf'
+HPGElst = 'r12_r16'
+FileVel = 'hpge_timeseries_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.nc'
 
 # ==============================================================================
 # OPENING fig
