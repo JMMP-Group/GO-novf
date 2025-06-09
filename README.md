@@ -16,14 +16,19 @@ conda activate pyogcm
 ### 3. Create the localisation area
 ```
 cd src/loc_area/
-python generate_loc_msk.py loc_area_novf_gosi10_025.inp 
+python generate_loc_msk.py ${loc_area_novf} 
 ```
-As we can see from the `loc_area_novf_gosi10_025.inp` input file, in GOSI10 we use a wider localisation area than in 
+where `loc_area_novf=`[loc_area_novf_gosi10_025.inp](https://github.com/JMMP-Group/GO-novf/blob/main/src/loc_area/loc_area_novf_gosi10_025.inp) in the case of eORCA025 and `loc_area_novf=`[loc_area_novf_gosi10_12.inp](https://github.com/JMMP-Group/GO-novf/blob/main/src/loc_area/loc_area_novf_gosi10_12.inp) for eORCA12.
+
+As we can see from the `${loc_area_novf}` input files, in GOSI10 we use a wider localisation area than in 
 [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893) - here we target the 2930m isobath instead of the 2800m one.
 
 <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/loc_area/loc_areas_novf.png?raw=true" width="300">
 
-The output of this step is a file including the bathymetry and the localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the files for `GOSI10@1/4` and `GOSI10@1/12` can be found at these ZENODO ARCHIVE (ADD!!!).
+The output of this step is a file including the bathymetry and the localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the files for `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at these zenodo archive:
+
+1) `GOSI10p3.0-eORCA025:`[]()
+2) `GOSI10p3.0-eORCA12:`[]()
 
 ### 4. Create the envelopes
 ```
