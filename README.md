@@ -25,6 +25,11 @@ As we can see from the `${loc_area_novf}` input files, in GOSI10 we use a wider 
 
 <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/loc_area/loc_areas_novf.png?raw=true" width="300">
 
+`GOSI10p3.0` uses the [Storkey et al. 2024](https://github.com/JMMP-Group/GLOBAL_BATHYMETRY/releases/tag/v1.0.0) bathymetry files:
+
+1) `GOSI10p3.0-eORCA025:`https://zenodo.org/records/15494369
+2) `GOSI10p3.0-eORCA12:`https://zenodo.org/records/15495870
+
 The output of this step is a file including the bathymetry and the localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the files for `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at these zenodo archive:
 
 1) `GOSI10p3.0-eORCA025:`[]()
@@ -35,21 +40,24 @@ The output of this step is a file including the bathymetry and the localisaztion
 cd ../envelopes/
 python generate_envelopes.py ${input_file}
 ``` 
-where `inp_file=MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.inp` is the file used to create the defintive version of the envelopes that are used in `GOSI10@1/4` while `inp_file=MEs_novf_gosi10_12_4env_2930_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.inp` is the file to create the defintive version of the  envelopes that are used in `GOSI10@1/12`. 
+where `inp_file=`[MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.inp]() for the case of `GOSI10p3.0-eORCA025` while `inp_file=`[MEs_novf_gosi10_12_4env_2930_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.inp]() for `GOSI10p3.0-eORCA12`. 
 
-In order to reduce horizontal pressure gradient errors, envelopes are smoothed using the iterative preocedure detailed in Appendix C of [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893), which uses the [Martinho and Batteen (2006)](https://www.sciencedirect.com/science/article/pii/S1463500306000060) smoothing algorithm  to reduce the local slope parameter $r$ below multiple user defined $r_{max}$ values, effectively allowing one to apply distinct level of smoothing in different areas of the model domain. In the case of GOSI10, increasingly more severe $r_{max}$ values were applied only in those grid points where spurious currents were $\geq 0.025$ $m s^{-1}$.
+In order to reduce horizontal pressure gradient (HPG) errors, envelopes are smoothed using the iterative preocedure detailed in Appendix C of [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893), which uses the [Martinho and Batteen (2006)](https://www.sciencedirect.com/science/article/pii/S1463500306000060) smoothing algorithm  to reduce the local slope parameter $r$ below multiple user defined $r_{max}$ values, effectively allowing one to apply distinct level of smoothing in different areas of the model domain. In the case of GOSI10, increasingly more severe $r_{max}$ values were applied only in those grid points where spurious currents were $\geq 0.025$ $m s^{-1}$. 
 
 The three months long tests to assess the horizontal pressure gradient (HPG) errors were conducted with 
 
-1) `GOSI10@1/4`: [u-dl766@312554](https://code.metoffice.gov.uk/trac/roses-u/browser/d/l/7/6/6/trunk?rev=312554) suite.
-2) `GOSI10@1/12`: [u-dn555@311670](https://code.metoffice.gov.uk/trac/roses-u/browser/d/n/5/5/5/trunk?rev=311670) suite.
+1) `GOSI10p3.0-eORCA025`: [u-dl766@312554](https://code.metoffice.gov.uk/trac/roses-u/browser/d/l/7/6/6/trunk?rev=312554) suite.
+2) `GOSI10p3.0-eORCA12`: [u-dn555@311670](https://code.metoffice.gov.uk/trac/roses-u/browser/d/n/5/5/5/trunk?rev=311670) suite.
 
-All the input files needed to generate and optimise the envelopes can be found here: ADD ZENODO ARCHIVE!!!
+All the ancillary files needed to generate and optimise the envelopes of `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at the following zenodo archives:
+
+1) `GOSI10p3.0-eORCA025`:[]()
+2) `GOSI10p3.0-eORCA12`: []()
 
 The output of this step is a file including the bathymetry, the localisaztion masks and the envelope surfaces that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the file for `GOSI10@1/4` and `GOSI10@1/12` can be found at ADD ZENODO ARCHIVE!!!  
 
 ### 5. Generate the vertical grid
-The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool.
+The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool - this has now be merged in the main, see `main@8e326e96b546251509d8d5a4db484500817ef784` commit.
 
 The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOSI10 can be found in [namelists](https://github.com/JMMP-Group/GO-novf/tree/main/src/namelists).
 
