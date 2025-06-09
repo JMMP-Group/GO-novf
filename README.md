@@ -57,7 +57,7 @@ The output of this step is a domain_cfg.nc file - the files for `GOSI10@1/4` and
 
 ### 6. Horizontal pressure gradient error
 
-Left is `GOSI10@1/4`, right `GOSI10@1/12`.
+Left is `GOSI10p3.0-eORCA025`, right `GOSI10p3.0-eORCA12`.
 
 <p float="left">
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/eORCA025/hpge_timeseries.png?raw=true" width="400" />
@@ -104,6 +104,10 @@ Left is `GOSI10@1/4`, right `GOSI10@1/12`.
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_025/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
 
+The strange canyon that can be seen in the first sections of GOSI9 are due to the fact that in the case of GOSI9 the bathymetry has been modified by hand as shown in the following map:
+
+<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/orca_025/gosi9_model_bathymetry.png?raw=true" width="400">
+
 #### GOSI10 - eORCA12 --------------------------
 
 <p float="left">
@@ -120,10 +124,6 @@ Left is `GOSI10@1/4`, right `GOSI10@1/12`.
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/zps_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
-
-The strange canyon that can be seen in the first sections of GOSI9 are due to the fact that in the case of GOSI9 the bathymetry has been modified by hand as shown in the following map:
-
-<img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi9/orca_025/gosi9_model_bathymetry.png?raw=true" width="400">
 
 ### 8. INITIAL CONDITION FOR GOSI WITH LOCALALISED ME s-coordinates
 
