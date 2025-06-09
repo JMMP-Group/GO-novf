@@ -26,17 +26,13 @@ vvar = None #"r0x" # None
 fig_path = './'
 
 # ----- GOSI10
-domcfg = ['/scratch/dbruciaf/GOSI10p3_12/r12-r12-r065/domain_cfg_12_MEs_novf_4env_2930_r12_r12-r065.nc']
-fbathy = ['/data/users/dbruciaf/GOSI10_input_files/eORCA12/MEs_novf/bathymetry.loc_area-nord_ovf_12.dep2930_sig2_stn9_itr4.MEs_novf_gosi10_12_4env_2930_r12_r12-r065.nc',
-          None]
+#domcfg = ['/scratch/dbruciaf/GOSI10p3_12/r12-r12-r065/domain_cfg_12_MEs_novf_4env_2930_r12_r12-r065.nc']
+#fbathy = ['/data/users/dbruciaf/GOSI10_input_files/eORCA12/MEs_novf/bathymetry.loc_area-nord_ovf_12.dep2930_sig2_stn9_itr4.MEs_novf_gosi10_12_4env_2930_r12_r12-r065.nc',
+#          None]
 
 # ----- GOSI9
-#domcfg = ['/data/users/dbruciaf/OVF/MEs_GOSI9/eORCA025/r12_r12-r075-r040_v3/domain_cfg_r12-r12-r075-r040_v3.nc',
-#          '/data/users/dbruciaf/OVF/GOSI9-eORCA025/domcfg_eORCA025_v3.nc'
-#         ]
-#fbathy = ['/data/users/dbruciaf/OVF/MEs_GOSI9/eORCA025/r12_r12-r075-r040_v3/bathymetry.loc_area.dep2800_novf_sig1_stn9_itr1.MEs_gosi9_4env_2800_r12_r12-r075-r040_v3.nc',
-#          None
-#         ]
+domcfg = ['/data/scratch/diego.bruciaferri/GOSI9/domaincfg_eORCA12_v3.0.nc']
+fbathy = [None]
 
 # Define the section we want to plot:
 list_sec = [

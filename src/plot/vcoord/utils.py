@@ -656,18 +656,13 @@ def prepare_domcfg(domcfg, fbathy=None, cut_lims=None):
         if ds_dom["ln_"+vcr] == 1: vcoor = vcr
 
     # Checking if localisation has been applied
-    if 'bathy_metry' in ds_dom.variables:
-       ds_dom["loc_msk"] = ds_dom.bathy_metry * 0.
-    elif 'bathy_meter' in ds_dom.variables:
-       ds_dom["loc_msk"] = ds_dom.bathy_meter * 0.
     if fbathy:
        ds_bat  = xr.open_dataset(fbathy, drop_variables=("x", "y")).squeeze()
        ds_dom["loc_msk"].values = ds_bat.s2z_msk.values
     else:
-       if vcoor == "sco":
-          ds_dom["loc_msk"][:,:] = 1.
-       else:
-          ds_dom["loc_msk"][:,:] = 0.
+       # No localisation
+       ds_dom["loc_msk"] = ds_dom.e1t * 0.
+       if vcoor == "sco": ds_dom["loc_msk"][:,:] = 1.
 
     if cut_lims:
        ds_dom = ds_dom.isel({'x':slice(cut_lims[0],cut_lims[1]),
