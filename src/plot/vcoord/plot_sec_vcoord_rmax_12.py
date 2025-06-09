@@ -29,10 +29,12 @@ fig_path = './'
 #domcfg = ['/scratch/dbruciaf/GOSI10p3_12/r12-r12-r065/domain_cfg_12_MEs_novf_4env_2930_r12_r12-r065.nc']
 #fbathy = ['/data/users/dbruciaf/GOSI10_input_files/eORCA12/MEs_novf/bathymetry.loc_area-nord_ovf_12.dep2930_sig2_stn9_itr4.MEs_novf_gosi10_12_4env_2930_r12_r12-r065.nc',
 #          None]
+domcfg = ['/data/users/diego.bruciaferri/Model_Config/GOSI/GOSI10_input_files/eORCA12/p1.0/domain_cfg_eORCA12_v3.1_r42.nc']
+fbathy = [None]
 
 # ----- GOSI9
-domcfg = ['/data/scratch/diego.bruciaferri/GOSI9/domaincfg_eORCA12_v3.0.nc']
-fbathy = [None]
+#domcfg = ['/data/scratch/diego.bruciaferri/GOSI9/domaincfg_eORCA12_v3.0.nc']
+#fbathy = [None]
 
 # Define the section we want to plot:
 list_sec = [
