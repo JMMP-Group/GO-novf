@@ -2,7 +2,6 @@
 Code to generate localized ME s-coordinates ([Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893)) in the Greenland-Scotland ridge region of GOSI configurations to better represent the Nordic overflows.
 
 ## Quick-start
-
 ### 1. Clone the repository
 ```
 git clone https://github.com/JMMP-Group/GO-novf.git
@@ -13,7 +12,17 @@ cd GO-novf
 conda env create -f pyogcm.yml
 conda activate pyogcm
 ```
-### 3. Create the localisation area
+### 3. Ancillary files needed to generate localization masks and envelopes
+The localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region and all the ancillary files needed to generate and optimise the envelopes of `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at the following zenodo archives:
+
+1) `GOSI10p3.0-eORCA025:`https://zenodo.org/records/15625102
+2) `GOSI10p3.0-eORCA12:`
+
+For the bathymetry files, `GOSI10p3.0` uses the [Storkey et al. 2024](https://github.com/JMMP-Group/GLOBAL_BATHYMETRY/releases/tag/v1.0.0) bottom topography files:
+
+1) `GOSI10p3.0-eORCA025:`https://zenodo.org/records/15494369
+2) `GOSI10p3.0-eORCA12:`https://zenodo.org/records/15495870
+### 4. Create the localisation area
 ```
 cd src/loc_area/
 python generate_loc_msk.py ${loc_area_novf} 
@@ -25,17 +34,7 @@ As we can see from the `${loc_area_novf}` input files, in GOSI10 we use a wider 
 
 <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/loc_area/loc_areas_novf.png?raw=true" width="300">
 
-`GOSI10p3.0` uses the [Storkey et al. 2024](https://github.com/JMMP-Group/GLOBAL_BATHYMETRY/releases/tag/v1.0.0) bathymetry files:
-
-1) `GOSI10p3.0-eORCA025:`https://zenodo.org/records/15494369
-2) `GOSI10p3.0-eORCA12:`https://zenodo.org/records/15495870
-
-The output of this step is a file including the bathymetry and the localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the files for `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at these zenodo archive:
-
-1) `GOSI10p3.0-eORCA025:`[]()
-2) `GOSI10p3.0-eORCA12:`[]()
-
-### 4. Create the envelopes
+### 5. Create the envelopes
 ```
 cd ../envelopes/
 python generate_envelopes.py ${input_file}
@@ -49,14 +48,7 @@ The three months long tests to assess the horizontal pressure gradient (HPG) err
 1) `GOSI10p3.0-eORCA025`: [u-dl766@312554](https://code.metoffice.gov.uk/trac/roses-u/browser/d/l/7/6/6/trunk?rev=312554) suite.
 2) `GOSI10p3.0-eORCA12`: [u-dn555@311670](https://code.metoffice.gov.uk/trac/roses-u/browser/d/n/5/5/5/trunk?rev=311670) suite.
 
-All the ancillary files needed to generate and optimise the envelopes of `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at the following zenodo archives:
-
-1) `GOSI10p3.0-eORCA025`:[]()
-2) `GOSI10p3.0-eORCA12`: []()
-
-The output of this step is a file including the bathymetry, the localisaztion masks and the envelope surfaces that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region - the file for `GOSI10@1/4` and `GOSI10@1/12` can be found at ADD ZENODO ARCHIVE!!!  
-
-### 5. Generate the vertical grid
+## 6. Generate the vertical grid
 The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool - this has now be merged in the main, see `main@8e326e96b546251509d8d5a4db484500817ef784` commit.
 
 The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOSI10 can be found in [namelists](https://github.com/JMMP-Group/GO-novf/tree/main/src/namelists).
