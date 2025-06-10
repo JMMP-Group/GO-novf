@@ -53,7 +53,10 @@ The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area 
 
 The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOSI10 can be found in [namelists](https://github.com/JMMP-Group/GO-novf/tree/main/src/namelists).
 
-The output of this step is a domain_cfg.nc file - the files for `GOSI10@1/4` and `GOSI10@1/12` can be found at ADD ZENODO ARCHIVE!!!
+The output of this step is a domain_cfg.nc file - the files for `GOSI10@1/4` and `GOSI10@1/12` can be found at the following zenodo archives:
+
+1) `GOSI10p3.0-eORCA025:`https://zenodo.org/uploads/15634496
+2) `GOSI10p3.0-eORCA12:`https://zenodo.org/uploads/15634622
 
 ### 6. Horizontal pressure gradient error
 
