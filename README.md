@@ -16,7 +16,7 @@ conda activate pyogcm
 The localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region and all the ancillary files needed to generate and optimise the envelopes of `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at the following zenodo archives:
 
 1) `GOSI10p3.0-eORCA025:`https://zenodo.org/records/15625102
-2) `GOSI10p3.0-eORCA12:`
+2) `GOSI10p3.0-eORCA12:`https://zenodo.org/uploads/15633874
 
 For the bathymetry files, `GOSI10p3.0` uses the [Storkey et al. 2024](https://github.com/JMMP-Group/GLOBAL_BATHYMETRY/releases/tag/v1.0.0) bottom topography files:
 
