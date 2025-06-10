@@ -2,16 +2,19 @@
 Code to generate localized ME s-coordinates ([Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893)) in the Greenland-Scotland ridge region of GOSI configurations to better represent the Nordic overflows.
 
 ## Quick-start
+
 ### 1. Clone the repository
 ```
 git clone https://github.com/JMMP-Group/GO-novf.git
 cd GO-novf
 ```
+
 ### 2. Create and activate conda environment
 ```
 conda env create -f pyogcm.yml
 conda activate pyogcm
 ```
+
 ### 3. Ancillary files needed to generate localization masks and envelopes
 The localisaztion masks that will be used to define the localised multi-envelope terrain-following vertical levels in the proximity of the Greenland-Scotland ridge region and all the ancillary files needed to generate and optimise the envelopes of `GOSI10p3.0-eORCA025` and `GOSI10p3.0-eORCA12` can be found at the following zenodo archives:
 
@@ -22,6 +25,7 @@ For the bathymetry files, `GOSI10p3.0` uses the [Storkey et al. 2024](https://gi
 
 1) `GOSI10p3.0-eORCA025:`https://zenodo.org/records/15494369
 2) `GOSI10p3.0-eORCA12:`https://zenodo.org/records/15495870
+
 ### 4. Create the localisation area
 ```
 cd src/loc_area/
@@ -48,7 +52,7 @@ The three months long tests to assess the horizontal pressure gradient (HPG) err
 1) `GOSI10p3.0-eORCA025`: [u-dl766@312554](https://code.metoffice.gov.uk/trac/roses-u/browser/d/l/7/6/6/trunk?rev=312554) suite.
 2) `GOSI10p3.0-eORCA12`: [u-dn555@311670](https://code.metoffice.gov.uk/trac/roses-u/browser/d/n/5/5/5/trunk?rev=311670) suite.
 
-## 6. Generate the vertical grid
+### 6. Generate the vertical grid
 The vertical grid of GOSI10 with local ME s-levels in the Nordic overflows area is generated using the [423-adding-more-flexibility-to-me-gvcs@17eae5a7](https://forge.nemo-ocean.eu/nemo/nemo/-/commit/17eae5a707b9d46b81e31a2827ec00a7e181d0ae) development branch of the DOMAINcfg tool - this has now be merged in the main, see `main@8e326e96b546251509d8d5a4db484500817ef784` commit.
 
 The `namelist_ref` and `namelist_cfg` used to configure the vertical grid of GOSI10 can be found in [namelists](https://github.com/JMMP-Group/GO-novf/tree/main/src/namelists).
@@ -58,7 +62,7 @@ The output of this step is a domain_cfg.nc file - the files for `GOSI10@1/4` and
 1) `GOSI10p3.0-eORCA025:`https://zenodo.org/uploads/15634496
 2) `GOSI10p3.0-eORCA12:`https://zenodo.org/uploads/15634622
 
-### 6. Horizontal pressure gradient error
+### 7. Horizontal pressure gradient error
 
 Left is `GOSI10p3.0-eORCA025`, right `GOSI10p3.0-eORCA12`.
 
@@ -72,7 +76,7 @@ Left is `GOSI10p3.0-eORCA025`, right `GOSI10p3.0-eORCA12`.
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/hpge/eORCA12/maximum_max_hpge_1_MEs_3months.png?raw=true" width="300">
 </p>
 
-### 7. Comparison with GOSI9
+### 8. Comparison with GOSI9
 
 #### GOSI9 - eORCA025 --------------------------
 <p float="left">
@@ -128,7 +132,7 @@ The strange canyon that can be seen in the first sections of GOSI9 are due to th
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
 
-### 8. INITIAL CONDITION FOR GOSI WITH LOCALALISED ME s-coordinates
+### 9. INITIAL CONDITION FOR GOSI WITH LOCALALISED ME s-coordinates
 
 Because of the way NEMO interpolates the T&S fields passed in input when initialising from rest (`ln_tsd_init=.true.`), the following two important point MUST be considered when initilising a model with localised ME levels (`ln_sco=.true.` and `ln_loczgr=.true.`):
 
