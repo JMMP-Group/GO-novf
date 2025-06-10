@@ -43,7 +43,7 @@ As we can see from the `${loc_area_novf}` input files, in GOSI10 we use a wider 
 cd ../envelopes/
 python generate_envelopes.py ${input_file}
 ``` 
-where `inp_file=`[MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.inp]() for the case of `GOSI10p3.0-eORCA025` while `inp_file=`[MEs_novf_gosi10_12_4env_2930_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.inp]() for `GOSI10p3.0-eORCA12`. 
+where `inp_file=`[MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.inp](https://github.com/JMMP-Group/GO-novf/blob/main/src/envelopes/MEs_novf_gosi10_025_4env_2930_r12_r16-r075-r040-r035_it2-r030.inp) for the case of `GOSI10p3.0-eORCA025` while `inp_file=`[MEs_novf_gosi10_12_4env_2930_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.inp](https://github.com/JMMP-Group/GO-novf/blob/main/src/envelopes/MEs_novf_gosi10_12_4env_2930_r12_r16-r075-r040-r035-r030-r025-r020-r015_itr3-r010.inp) for `GOSI10p3.0-eORCA12`. 
 
 In order to reduce horizontal pressure gradient (HPG) errors, envelopes are smoothed using the iterative preocedure detailed in Appendix C of [Bruciaferri et al. 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003893), which uses the [Martinho and Batteen (2006)](https://www.sciencedirect.com/science/article/pii/S1463500306000060) smoothing algorithm  to reduce the local slope parameter $r$ below multiple user defined $r_{max}$ values, effectively allowing one to apply distinct level of smoothing in different areas of the model domain. In the case of GOSI10, increasingly more severe $r_{max}$ values were applied only in those grid points where spurious currents were $\geq 0.025$ $m s^{-1}$. 
 
