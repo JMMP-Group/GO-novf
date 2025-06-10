@@ -132,7 +132,7 @@ The strange canyon that can be seen in the first sections of GOSI9 are due to th
    <img src="https://github.com/JMMP-Group/GO-novf/blob/main/src/plot/vcoord/gosi10/orca_12/sco_section_0.34072625-68.26346438_-30.314948-52.858934.png?raw=true" width="400" />
 </p>
 
-### 9. INITIAL CONDITION FOR GOSI WITH LOCALALISED ME s-coordinates
+### 9. INITIAL CONDITION FOR GOSI WITH LOCALISED ME s-coordinates
 
 Because of the way NEMO interpolates the T&S fields passed in input when initialising from rest (`ln_tsd_init=.true.`), the following two important point MUST be considered when initilising a model with localised ME levels (`ln_sco=.true.` and `ln_loczgr=.true.`):
 
